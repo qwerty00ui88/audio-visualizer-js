@@ -2,4 +2,4 @@ export {
   startAudioContext,
   initAudioVisualizer,
   visualize,
-} from './audioVisualizer.mjs';
+} from './audioVisualizer.js';
