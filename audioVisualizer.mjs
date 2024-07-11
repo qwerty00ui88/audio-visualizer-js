@@ -1,7 +1,7 @@
-export function startAudioContext(audioContext, target, type) {
+export function startAudioContext(audioContext) {
   if (!audioContext) {
     audioContext = new AudioContext();
-    initAudioVisualizer();
+    initAudioVisualizer(audioContext);
   }
 
   audioContext
@@ -12,11 +12,9 @@ export function startAudioContext(audioContext, target, type) {
     .catch((error) => {
       console.error('Failed to resume AudioContext:', error);
     });
-
-  target.removeEventListener(type, startAudioContext);
 }
 
-export function initAudioVisualizer(visualize) {
+export function initAudioVisualizer(audioContext) {
   navigator.mediaDevices
     .getUserMedia({ audio: true })
     .then((stream) => {
@@ -32,13 +30,13 @@ export function initAudioVisualizer(visualize) {
       document.body.appendChild(canvas);
       const ctx = canvas.getContext('2d');
 
-      visualize();
+      visualize(canvas, analyser, ctx);
     })
     .catch((error) => console.error('Error accessing microphone:', error));
 }
 
-export function visualize() {
-  requestAnimationFrame(visualize);
+export function visualize(canvas, analyser, ctx) {
+  requestAnimationFrame(() => visualize(canvas, analyser, ctx));
 
   const bufferLength = analyser.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
